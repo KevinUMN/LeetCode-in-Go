@@ -1,10 +1,12 @@
 package problem0003
 
-func lengthOfLongestSubstring(s string) int {
+// support ASCII code only
+func lengthOfLongestSubstringAscii(s string) int {
 	// location[s[i]] == j 表示：
-	// s中第i个字符串，上次出现在s的j位置，所以，在s[j+1:i]中没有s[i]
-	// location[s[i]] == -1 表示： s[i] 在s中第一次出现
+	// s中第i个字符，上次出现在s的j位置，所以，在s[j+1:i]中没有s[i]
+	// location[s[i]] == -1 表示： s[i] 在s中没有出现
 	location := [256]int{} // 只有256长是因为，假定输入的字符串只有ASCII字符
+	//locMap := make(map[string]int, 256)
 	for i := range location {
 		location[i] = -1 // 先设置所有的字符都没有见过
 	}
@@ -21,6 +23,38 @@ func lengthOfLongestSubstring(s string) int {
 			maxLen = i + 1 - left
 		}
 		location[s[i]] = i
+	}
+
+	return maxLen
+}
+
+// Support UNICODE
+func lengthOfLongestSubstringUnicode(s string) int {
+
+	// convert s to slice of rune for all Unicode runes
+	runes := []rune(s)
+
+	// location map, key is string , value is the location of which the key is appeared in s.
+	// the max length of the map is the len of s.
+	location := make(map[int32]int, len(runes))
+
+	// init map, -1 means no appearance yet.
+	for _, v := range s {
+		if _, ok := location[v]; !ok {
+			location[v] = -1
+		}
+	}
+
+	maxLen, left := 0, 0
+
+	for k, v := range runes {
+		// char already exist in s[left:k]
+		if location[v] >= left {
+			left = location[v] + 1
+		} else if curLen := k - left + 1; curLen > maxLen {
+			maxLen = curLen
+		}
+		location[v] = k
 	}
 
 	return maxLen
