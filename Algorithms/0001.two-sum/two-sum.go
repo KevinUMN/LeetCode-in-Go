@@ -3,7 +3,6 @@ package problem0001
 func twoSum(nums []int, target int) []int {
 	// index 负责保存map[整数]整数的序列号
 	index := make(map[int]int, len(nums))
-
 	// 通过 for 循环，获取b的序列号
 	for i, b := range nums {
 		// 通过查询map，获取a = target - b的序列号
