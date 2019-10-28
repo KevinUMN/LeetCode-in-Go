@@ -3,26 +3,28 @@ package problem0020
 func isValid(s string) bool {
 	size := len(s)
 
-	stack := make([]byte, size)
-	top := 0
+	stack := make([]int32, size)
+	top := -1
 
-	for i := 0; i < size; i++ {
-		c := s[i]
-		switch c {
+	for _, v := range s {
+		switch v {
 		case '(':
-			stack[top] = c + 1 // '('+1 is ')'
 			top++
-		case '[', '{':
-			stack[top] = c + 2
+			stack[top] = ')'
+		case '{':
 			top++
-		case ')', ']', '}':
-			if top > 0 && stack[top-1] == c {
-				top--
-			} else {
+			stack[top] = '}'
+		case '[':
+			top++
+			stack[top] = ']'
+		case ')', '}', ']':
+			if top == -1 || v != stack[top] {
 				return false
+			} else {
+				top--
 			}
 		}
 	}
 
-	return top == 0
+	return top == -1
 }
